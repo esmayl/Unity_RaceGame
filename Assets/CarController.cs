@@ -58,13 +58,6 @@ public class CarController : MonoBehaviour
         UpdateWheelPos(steeringRight, frontRight);
 
         Debug.Log(thisBody.velocity);
-
-        //frontLeft.localRotation = Quaternion.Euler(new Vector3(0, steeringLeft.steerAngle, 0));
-        //frontRight.localRotation = Quaternion.Euler(new Vector3(0, steeringRight.steerAngle, 0));
-
-        //rearLeft.Rotate(new Vector3(torqueLeft.rpm*0.1f, 0, 0));
-        //rearRight.Rotate(new Vector3(torqueLeft.rpm*0.1f, 0, 0));
-
     }
 
     void UpdateWheelPos(WheelCollider col,Transform colTransform)
