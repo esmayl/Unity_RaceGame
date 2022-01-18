@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 public class CarController : MonoBehaviour
 {
     public InputAction movementInput;
-
+    public float velocity;
 
     public WheelCollider steeringLeft, steeringRight;
     public WheelCollider torqueLeft, torqueRight;
@@ -16,6 +16,8 @@ public class CarController : MonoBehaviour
     public float speed = 5;
 
     Rigidbody thisBody;
+    float second = 0;
+    Vector3 previousPos; 
 
     void Awake()
     {
@@ -36,6 +38,8 @@ public class CarController : MonoBehaviour
         torqueRight = transform.Find("WheelColliderRR").GetComponent<WheelCollider>();
 
         thisBody = GetComponent<Rigidbody>();
+
+        previousPos = transform.position;
     }
 
     private void MovementInput_performed(InputAction.CallbackContext obj)
@@ -57,7 +61,16 @@ public class CarController : MonoBehaviour
         UpdateWheelPos(steeringLeft, frontLeft);
         UpdateWheelPos(steeringRight, frontRight);
 
-        Debug.Log(thisBody.velocity);
+        if(second > 0.1f)
+        {
+            velocity = Vector3.Distance(previousPos, transform.position) * 3600 / 100; // /100 for km/h
+            second = 0;
+            previousPos = transform.position;
+        }
+        else
+        {
+            second += Time.fixedDeltaTime;
+        }
     }
 
     void UpdateWheelPos(WheelCollider col,Transform colTransform)
