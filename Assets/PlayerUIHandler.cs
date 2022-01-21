@@ -11,9 +11,13 @@ public class PlayerUIHandler : MonoBehaviour
 
     public GameObject velocityTextObject;
     public GameObject timeTextObject;
+    public GameObject lapsTextObject;
+
 
     TextMeshProUGUI velocityText;
     TextMeshProUGUI timeText;
+    TextMeshProUGUI lapsText;
+
 
     TimeSpan currentTime = new TimeSpan();
 
@@ -23,6 +27,8 @@ public class PlayerUIHandler : MonoBehaviour
 
         velocityText = velocityTextObject.GetComponent<TextMeshProUGUI>();
         timeText = timeTextObject.GetComponent<TextMeshProUGUI>();
+
+        lapsText = lapsTextObject.GetComponent<TextMeshProUGUI>();
     }
 
 
@@ -36,5 +42,10 @@ public class PlayerUIHandler : MonoBehaviour
         currentTime = TimeSpan.FromSeconds(newTime);
 
         timeText.text = currentTime.ToString(@"mm\:ss\:fff");    
+    }
+
+    public void UpdateCurrentLap(int currentLap,int amountOfLaps)
+    {
+        lapsText.text = currentLap+"/"+amountOfLaps;
     }
 }

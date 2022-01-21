@@ -449,7 +449,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 4.299988, y: -4.0000153}
+  m_AnchoredPosition: {x: 4.299988, y: -4}
   m_SizeDelta: {x: 150, y: 50}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &92146762
@@ -1946,7 +1946,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 88.20001, y: 224.03194}
+  m_AnchoredPosition: {x: 82, y: 224.03194}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &398986908
@@ -2868,7 +2868,7 @@ GameObject:
   - component: {fileID: 876764518}
   - component: {fileID: 876764522}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2975,6 +2975,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   velocityTextObject: {fileID: 1924750551}
   timeTextObject: {fileID: 1068677922}
+  lapsTextObject: {fileID: 398986906}
 --- !u!1 &886932988
 GameObject:
   m_ObjectHideFlags: 0
@@ -4003,7 +4004,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: -2.2999878, y: -4}
-  m_SizeDelta: {x: 146.5, y: 40.3}
+  m_SizeDelta: {x: 158.6, y: 40.3}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1291071526
 MonoBehaviour:
@@ -6462,6 +6463,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd1e66cf255221f47b50aa6eb939183b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  amountOfLaps: 10
 --- !u!4 &1975074967
 Transform:
   m_ObjectHideFlags: 0
