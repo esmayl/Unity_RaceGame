@@ -12,16 +12,18 @@ public class PlayerUIHandler : MonoBehaviour
     public GameObject velocityTextObject;
     public GameObject timeTextObject;
     public GameObject lapsTextObject;
-
+    public GameObject previousLapsHolder;
+    public GameObject previousLapsTemplate;
 
     TextMeshProUGUI velocityText;
     TextMeshProUGUI timeText;
     TextMeshProUGUI lapsText;
+    TextMeshProUGUI[] previousLaps;
 
 
     TimeSpan currentTime = new TimeSpan();
 
-    void Awake()
+    void Start()
     {
         instance = this;
 
@@ -29,6 +31,19 @@ public class PlayerUIHandler : MonoBehaviour
         timeText = timeTextObject.GetComponent<TextMeshProUGUI>();
 
         lapsText = lapsTextObject.GetComponent<TextMeshProUGUI>();
+
+        int tempLaps = GameHandler.instance.amountOfLaps;
+        previousLaps = new TextMeshProUGUI[tempLaps];
+
+        
+        UpdateCurrentLap(1, tempLaps);
+
+
+        for (int i = 0; i < tempLaps; i++)
+        {
+            GameObject temp = Instantiate(previousLapsTemplate, previousLapsHolder.transform);
+            previousLaps[i] = temp.GetComponent<TextMeshProUGUI>();
+        }
     }
 
 
@@ -47,5 +62,12 @@ public class PlayerUIHandler : MonoBehaviour
     public void UpdateCurrentLap(int currentLap,int amountOfLaps)
     {
         lapsText.text = currentLap+"/"+amountOfLaps;
+    }
+
+    public void UpdatePreviousTimeText(float newTime,int currentLap)
+    {
+        currentTime = TimeSpan.FromSeconds(newTime);
+
+        previousLaps[currentLap - 1].text = currentTime.ToString(@"mm\:ss\:fff");
     }
 }

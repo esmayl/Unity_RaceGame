@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GameHandler : MonoBehaviour
 {
+    public static GameHandler instance;
     public GameObject finish;
     public GameObject midPoint;
 
@@ -19,12 +20,12 @@ public class GameHandler : MonoBehaviour
     void Awake()
     {
         currentLap = 1;
-        PlayerUIHandler.instance.UpdateCurrentLap(currentLap, amountOfLaps);
         finish.GetComponent<TriggerHandler>().triggerDelegate += LapDelegate;
         midPoint.GetComponent<TriggerHandler>().triggerDelegate += PastMidpoint;
 
         midPointPast.Add(false);
         laptimes.Add(0, new List<float>());
+        instance = this;
     }
 
     private void PastMidpoint(int playerId)
@@ -37,7 +38,6 @@ public class GameHandler : MonoBehaviour
         if (midPointPast[playerId])
         {
             laptimes[playerId].Add(gameTime);
-            gameTime = 0;
             NextLap();
         }
 
@@ -54,8 +54,13 @@ public class GameHandler : MonoBehaviour
     {
         if (currentLap < amountOfLaps)
         {
+            PlayerUIHandler.instance.UpdatePreviousTimeText(gameTime, currentLap);
+
             currentLap++;
+            
             PlayerUIHandler.instance.UpdateCurrentLap(currentLap, amountOfLaps);
+
+            gameTime = 0;
         }
         else
         {
