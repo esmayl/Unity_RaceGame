@@ -5,7 +5,6 @@ using UnityEngine.InputSystem;
 
 public class CarController : MonoBehaviour
 {
-    public InputAction movementInput;
     public float velocity;
 
     public WheelCollider steeringLeft, steeringRight;
@@ -13,21 +12,18 @@ public class CarController : MonoBehaviour
     public Transform rearLeft, rearRight, frontLeft, frontRight;
 
     public Vector2 playerInput;
-    public float speed = 5;
+    public float speed = 2000;
 
     public int playerId;
 
     Rigidbody thisBody;
     float second = 0;
-    Vector3 previousPos; 
+    Vector3 previousPos;
+    float reducedSpeed = 700;
+    float normalSpeed;
 
     void Awake()
     {
-        movementInput.Enable();
-        movementInput.started += MovementInput_performed;
-        movementInput.performed += MovementInput_performed;
-        movementInput.canceled += MovementInput_performed;
-
         frontLeft = transform.Find("WheelColliderFL").GetChild(0);
         frontRight = transform.Find("WheelColliderFR").GetChild(0);
         rearLeft = transform.Find("WheelColliderRL").GetChild(0);
@@ -44,15 +40,34 @@ public class CarController : MonoBehaviour
         previousPos = transform.position;
 
         playerId = 0;
-    }
 
-    private void MovementInput_performed(InputAction.CallbackContext obj)
-    {
-        playerInput = obj.ReadValue<Vector2>();
+        normalSpeed = speed;
     }
 
     void FixedUpdate()
     {
+        if (!Physics.Raycast(transform.position + transform.up + (transform.forward * 2), -transform.up, 10, 1 << LayerMask.NameToLayer("Track")))
+        {
+            speed = reducedSpeed;
+        }
+        else if (!Physics.Raycast(transform.position + transform.up + (transform.right * 2), -transform.up, 10, 1 << LayerMask.NameToLayer("Track")))
+        {
+            speed = reducedSpeed;
+        }
+        else if (!Physics.Raycast(transform.position + transform.up + (transform.right * -2), -transform.up, 10, 1 << LayerMask.NameToLayer("Track")))
+        {
+            speed = reducedSpeed;
+        }
+        else if (!Physics.Raycast(transform.position + transform.up + (transform.forward * -2), -transform.up, 10, 1 << LayerMask.NameToLayer("Track")))
+        {
+            speed = reducedSpeed;
+        }
+        else
+        {
+            speed = normalSpeed;
+        }
+
+
         torqueLeft.motorTorque = playerInput.y * speed;
         torqueRight.motorTorque = playerInput.y * speed;
 

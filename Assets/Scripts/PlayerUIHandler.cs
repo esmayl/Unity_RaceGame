@@ -43,6 +43,7 @@ public class PlayerUIHandler : MonoBehaviour
         {
             GameObject temp = Instantiate(previousLapsTemplate, previousLapsHolder.transform);
             previousLaps[i] = temp.GetComponent<TextMeshProUGUI>();
+            previousLaps[i].text = "";
         }
     }
 

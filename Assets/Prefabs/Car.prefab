@@ -262,6 +262,7 @@ GameObject:
   - component: {fileID: 3714867442793350537}
   - component: {fileID: 3714867442793350536}
   - component: {fileID: 6248322780019237833}
+  - component: {fileID: 4605528190885324779}
   m_Layer: 0
   m_Name: Car
   m_TagString: Untagged
@@ -330,15 +331,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c26e29e657554dc469612ac4003d2fbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementInput:
-    m_Name: Movement Input
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 20d47df7-febd-4e03-b9b8-6e6989d39ee8
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
   velocity: 0
   steeringLeft: {fileID: 0}
   steeringRight: {fileID: 0}
@@ -350,6 +342,68 @@ MonoBehaviour:
   frontRight: {fileID: 0}
   playerInput: {x: 0, y: 0}
   speed: 5
+  playerId: 0
+--- !u!114 &4605528190885324779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3714867442656299270}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2abec67580061c441a4a7ee4848517ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementInput:
+    m_Name: Movement Input
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 159c86a2-18ee-4084-a876-c0d065b68a8f
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: Movement
+      m_Id: 77942556-5543-41d1-ac79-20cdab5cac33
+      m_Path: 2DVector
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Movement Input
+      m_Flags: 4
+    - m_Name: up
+      m_Id: 51ac1542-9af3-43d5-a429-031525caa074
+      m_Path: <Keyboard>/w
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Movement Input
+      m_Flags: 8
+    - m_Name: down
+      m_Id: 5c687af5-488d-433b-9f47-50dcca7d4c73
+      m_Path: <Keyboard>/s
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Movement Input
+      m_Flags: 8
+    - m_Name: left
+      m_Id: 43249779-c097-40a9-8711-127f980f8798
+      m_Path: <Keyboard>/a
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Movement Input
+      m_Flags: 8
+    - m_Name: right
+      m_Id: da3ab21b-5ef4-4de4-90c6-c29251f01ec1
+      m_Path: <Keyboard>/d
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Movement Input
+      m_Flags: 8
+    m_Flags: 0
 --- !u!1 &3714867442656299276
 GameObject:
   m_ObjectHideFlags: 0

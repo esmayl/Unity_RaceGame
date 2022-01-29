@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8071994154791956750}
   - component: {fileID: 6332497184033310148}
   - component: {fileID: 6328670885464780835}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Track_Corner_90d_type_01_15x15m_free_obs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
