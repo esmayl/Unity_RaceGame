@@ -228,7 +228,9 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 07f44fe3e9c462146a7769b976c50ec4, type: 2}
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: b79a63d4c7c65e747996bf2fbcdfb33d, type: 2}
+  - {fileID: 2100000, guid: 1b1b2bf1fca77d04aa8c88edc0d73a32, type: 2}
+  - {fileID: 2100000, guid: ab035d7682921704a9015ac353311d57, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -403,6 +405,15 @@ MonoBehaviour:
       m_Groups: 
       m_Action: Movement Input
       m_Flags: 8
+    m_Flags: 0
+  brakeInput:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 7269473a-7651-4a59-a3ee-2bdbe56852fb
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
     m_Flags: 0
 --- !u!1 &3714867442656299276
 GameObject:

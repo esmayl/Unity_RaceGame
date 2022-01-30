@@ -46,6 +46,28 @@ public class CarController : MonoBehaviour
 
     void FixedUpdate()
     {
+        Debug.Log(steeringLeft.brakeTorque);
+        GroundCheck();
+
+        Accelerate();
+
+        Steer();
+
+        if (second > 0.1f)
+        {
+            velocity = Vector3.Distance(previousPos, transform.position) * 3600 / 100; // /100 for km/h
+            second = 0;
+            previousPos = transform.position;
+            PlayerUIHandler.instance.UpdateVelocityText(velocity);
+        }
+        else
+        {
+            second += Time.fixedDeltaTime;
+        }
+    }
+
+    void GroundCheck()
+    {
         if (!Physics.Raycast(transform.position + transform.up + (transform.forward * 2), -transform.up, 10, 1 << LayerMask.NameToLayer("Track")))
         {
             speed = reducedSpeed;
@@ -66,11 +88,16 @@ public class CarController : MonoBehaviour
         {
             speed = normalSpeed;
         }
+    }
 
-
+    void Accelerate()
+    {
         torqueLeft.motorTorque = playerInput.y * speed;
         torqueRight.motorTorque = playerInput.y * speed;
+    }
 
+    void Steer()
+    {
         steeringLeft.steerAngle = playerInput.x * 30;
         steeringRight.steerAngle = playerInput.x * 30;
 
@@ -79,18 +106,22 @@ public class CarController : MonoBehaviour
         UpdateWheelPos(torqueRight, rearRight);
         UpdateWheelPos(steeringLeft, frontLeft);
         UpdateWheelPos(steeringRight, frontRight);
+    }
 
-        if(second > 0.1f)
-        {
-            velocity = Vector3.Distance(previousPos, transform.position) * 3600 / 100; // /100 for km/h
-            second = 0;
-            previousPos = transform.position;
-            PlayerUIHandler.instance.UpdateVelocityText(velocity);
-        }
-        else
-        {
-            second += Time.fixedDeltaTime;
-        }
+    public void Brake()
+    {
+        torqueLeft.brakeTorque = 1000;
+        torqueRight.brakeTorque = 1000;
+        steeringLeft.brakeTorque = 1000;
+        steeringRight.brakeTorque = 1000;
+    }
+
+    public void StopBraking()
+    {
+        torqueLeft.brakeTorque = 0;
+        torqueRight.brakeTorque = 0;
+        steeringLeft.brakeTorque = 0;
+        steeringRight.brakeTorque = 0;
     }
 
     void UpdateWheelPos(WheelCollider col,Transform colTransform)
@@ -103,4 +134,6 @@ public class CarController : MonoBehaviour
         colTransform.position = pos;
         colTransform.rotation = rot;
     }
+
+
 }
