@@ -38,6 +38,7 @@ public class GameHandler : MonoBehaviour
         if (midPointPast[playerId])
         {
             laptimes[playerId].Add(gameTime);
+            midPointPast[playerId] = false;
             NextLap();
         }
 

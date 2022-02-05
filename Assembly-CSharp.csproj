@@ -55,10 +55,12 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\InputHandler.cs" />
     <Compile Include="Assets\Scripts\CameraFollow.cs" />
+    <Compile Include="Assets\Scripts\AiNodes.cs" />
     <Compile Include="Assets\Scripts\TriggerHandler.cs" />
     <Compile Include="Assets\Scripts\PlayerUIHandler.cs" />
     <Compile Include="Assets\Scripts\CarController.cs" />
     <Compile Include="Assets\Scripts\GameHandler.cs" />
+    <Compile Include="Assets\AudioHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

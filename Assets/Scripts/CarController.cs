@@ -46,7 +46,6 @@ public class CarController : MonoBehaviour
 
     void FixedUpdate()
     {
-        Debug.Log(steeringLeft.brakeTorque);
         GroundCheck();
 
         Accelerate();
