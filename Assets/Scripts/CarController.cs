@@ -11,7 +11,7 @@ public class CarController : MonoBehaviour
     public WheelCollider torqueLeft, torqueRight;
     public Transform rearLeft, rearRight, frontLeft, frontRight;
 
-    public Vector2 playerInput;
+    public Vector2 playerInput;// Set externally by controller script
     public float speed = 2000;
 
     public int playerId;
@@ -107,6 +107,7 @@ public class CarController : MonoBehaviour
         UpdateWheelPos(steeringRight, frontRight);
     }
 
+    //Used externally by controller script
     public void Brake()
     {
         torqueLeft.brakeTorque = 1000;
@@ -115,6 +116,7 @@ public class CarController : MonoBehaviour
         steeringRight.brakeTorque = 1000;
     }
 
+    //Used externally by controller script
     public void StopBraking()
     {
         torqueLeft.brakeTorque = 0;
