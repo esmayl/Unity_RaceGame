@@ -39,8 +39,6 @@ public class CarController : MonoBehaviour
 
         previousPos = transform.position;
 
-        playerId = 0;
-
         normalSpeed = speed;
     }
 
@@ -65,29 +63,6 @@ public class CarController : MonoBehaviour
         }
     }
 
-    void GroundCheck()
-    {
-        if (!Physics.Raycast(transform.position + transform.up + (transform.forward * 2), -transform.up, 10, 1 << LayerMask.NameToLayer("Track")))
-        {
-            speed = reducedSpeed;
-        }
-        else if (!Physics.Raycast(transform.position + transform.up + (transform.right * 2), -transform.up, 10, 1 << LayerMask.NameToLayer("Track")))
-        {
-            speed = reducedSpeed;
-        }
-        else if (!Physics.Raycast(transform.position + transform.up + (transform.right * -2), -transform.up, 10, 1 << LayerMask.NameToLayer("Track")))
-        {
-            speed = reducedSpeed;
-        }
-        else if (!Physics.Raycast(transform.position + transform.up + (transform.forward * -2), -transform.up, 10, 1 << LayerMask.NameToLayer("Track")))
-        {
-            speed = reducedSpeed;
-        }
-        else
-        {
-            speed = normalSpeed;
-        }
-    }
 
     void Accelerate()
     {
@@ -123,6 +98,30 @@ public class CarController : MonoBehaviour
         torqueRight.brakeTorque = 0;
         steeringLeft.brakeTorque = 0;
         steeringRight.brakeTorque = 0;
+    }
+
+    void GroundCheck()
+    {
+        if (!Physics.Raycast(transform.position + transform.up + (transform.forward * 2), -transform.up, 10, 1 << LayerMask.NameToLayer("Track")))
+        {
+            speed = reducedSpeed;
+        }
+        else if (!Physics.Raycast(transform.position + transform.up + (transform.right * 2), -transform.up, 10, 1 << LayerMask.NameToLayer("Track")))
+        {
+            speed = reducedSpeed;
+        }
+        else if (!Physics.Raycast(transform.position + transform.up + (transform.right * -2), -transform.up, 10, 1 << LayerMask.NameToLayer("Track")))
+        {
+            speed = reducedSpeed;
+        }
+        else if (!Physics.Raycast(transform.position + transform.up + (transform.forward * -2), -transform.up, 10, 1 << LayerMask.NameToLayer("Track")))
+        {
+            speed = reducedSpeed;
+        }
+        else
+        {
+            speed = normalSpeed;
+        }
     }
 
     void UpdateWheelPos(WheelCollider col,Transform colTransform)

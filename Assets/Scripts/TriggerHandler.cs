@@ -10,7 +10,7 @@ public class TriggerHandler : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if(other.tag == "Player")
+        if(other.tag == "Car")
         {
             triggerDelegate(other.GetComponent<CarController>().playerId);
         }

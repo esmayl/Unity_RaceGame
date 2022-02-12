@@ -9,9 +9,9 @@ public class GameHandler : MonoBehaviour
     public GameObject midPoint;
 
     public int amountOfLaps;
-    int currentLap;
-
-    float gameTime;
+    public int amountOfPlayers = 2;
+    int[] currentLaps;
+    float[] gameTimers;
 
     List<bool> midPointPast = new List<bool>();
 
@@ -19,13 +19,19 @@ public class GameHandler : MonoBehaviour
 
     void Awake()
     {
-        currentLap = 1;
         finish.GetComponent<TriggerHandler>().triggerDelegate += LapDelegate;
         midPoint.GetComponent<TriggerHandler>().triggerDelegate += PastMidpoint;
 
-        midPointPast.Add(false);
-        laptimes.Add(0, new List<float>());
         instance = this;
+
+        gameTimers = new float[amountOfPlayers];
+        currentLaps = new int[amountOfLaps];
+
+        for (int i = 0; i < amountOfPlayers; i++)
+        {
+            midPointPast.Add(false);
+            laptimes.Add(i, new List<float>());
+        }
     }
 
     private void PastMidpoint(int playerId)
@@ -37,31 +43,42 @@ public class GameHandler : MonoBehaviour
     {
         if (midPointPast[playerId])
         {
-            laptimes[playerId].Add(gameTime);
+            laptimes[playerId].Add(gameTimers[playerId]);
             midPointPast[playerId] = false;
-            NextLap();
+            NextLap(playerId);
         }
 
     }
 
     void Update()
     {
-        gameTime += Time.deltaTime;
-        PlayerUIHandler.instance.UpdateTimeText(gameTime);
+        for (int i = 0; i < gameTimers.Length; i++) 
+        {
+            gameTimers[i] += Time.deltaTime;
+        }
+
+        PlayerUIHandler.instance.UpdateTimeText(gameTimers[0]);
     }
 
 
-    public void NextLap()
+    public void NextLap(int playerId)
     {
-        if (currentLap < amountOfLaps)
+        if (currentLaps[playerId] < amountOfLaps)
         {
-            PlayerUIHandler.instance.UpdatePreviousTimeText(gameTime, currentLap);
 
-            currentLap++;
+            currentLaps[playerId]++;
             
-            PlayerUIHandler.instance.UpdateCurrentLap(currentLap, amountOfLaps);
+            if (playerId == 0)
+            {
+                PlayerUIHandler.instance.UpdatePreviousTimeText(gameTimers[playerId], currentLaps[playerId]);
+                PlayerUIHandler.instance.UpdateCurrentLap(currentLaps[playerId], amountOfLaps);
+            }
+            else
+            {
 
-            gameTime = 0;
+            }
+
+            gameTimers[playerId] = 0;
         }
         else
         {

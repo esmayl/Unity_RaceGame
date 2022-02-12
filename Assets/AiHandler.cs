@@ -22,10 +22,12 @@ public class AiHandler : MonoBehaviour
 
     void Update()
     {
-        translatedDirection.x = Vector3.Dot(transform.right, currentNode.Position() - transform.position);
-        translatedDirection.y = Vector3.Dot(transform.forward, currentNode.Position() - transform.position) / Vector3.Distance(transform.position,currentNode.Position());
+        Vector3 localDir = currentNode.Position() - (transform.position + (transform.forward * carController.velocity * 0.1f));
 
-        carController.playerInput = translatedDirection.normalized;
+        translatedDirection.x = Vector3.Dot(transform.right, localDir.normalized);
+        translatedDirection.y = Vector3.Dot(transform.forward, localDir.normalized);
+
+        carController.playerInput = translatedDirection;
 
         if (Vector3.Distance(transform.position, currentNode.Position()) < 2)
         {
