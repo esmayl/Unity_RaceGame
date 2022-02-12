@@ -32,14 +32,21 @@ public class GameHandler : MonoBehaviour
             midPointPast.Add(false);
             laptimes.Add(i, new List<float>());
         }
+
     }
 
-    private void PastMidpoint(int playerId)
+
+    void Start()
+    {
+        PlayerUIHandler.instance.racePositionHolder.InitRacePositionList(amountOfPlayers);
+    }
+
+    void PastMidpoint(int playerId)
     {
         midPointPast[playerId] = true;
     }
 
-    private void LapDelegate(int playerId)
+    void LapDelegate(int playerId)
     {
         if (midPointPast[playerId])
         {
@@ -66,16 +73,14 @@ public class GameHandler : MonoBehaviour
         if (currentLaps[playerId] < amountOfLaps)
         {
 
+            PlayerUIHandler.instance.racePositionHolder.UpdateTime(playerId, laptimes[playerId][currentLaps[playerId]]);
+
             currentLaps[playerId]++;
             
             if (playerId == 0)
             {
                 PlayerUIHandler.instance.UpdatePreviousTimeText(gameTimers[playerId], currentLaps[playerId]);
                 PlayerUIHandler.instance.UpdateCurrentLap(currentLaps[playerId], amountOfLaps);
-            }
-            else
-            {
-
             }
 
             gameTimers[playerId] = 0;

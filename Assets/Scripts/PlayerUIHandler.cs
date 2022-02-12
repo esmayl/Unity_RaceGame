@@ -15,6 +15,8 @@ public class PlayerUIHandler : MonoBehaviour
     public GameObject previousLapsHolder;
     public GameObject previousLapsTemplate;
 
+    public RacePositionHandler racePositionHolder;
+
     TextMeshProUGUI velocityText;
     TextMeshProUGUI timeText;
     TextMeshProUGUI lapsText;
