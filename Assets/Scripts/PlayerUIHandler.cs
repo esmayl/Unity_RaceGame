@@ -14,6 +14,7 @@ public class PlayerUIHandler : MonoBehaviour
     public GameObject lapsTextObject;
     public GameObject previousLapsHolder;
     public GameObject previousLapsTemplate;
+    public GameObject endRaceObject;
 
     public RacePositionHandler racePositionHolder;
 
@@ -21,6 +22,7 @@ public class PlayerUIHandler : MonoBehaviour
     TextMeshProUGUI timeText;
     TextMeshProUGUI lapsText;
     TextMeshProUGUI[] previousLaps;
+    TextMeshProUGUI endRacePosition;
 
 
     TimeSpan currentTime = new TimeSpan();
@@ -30,9 +32,11 @@ public class PlayerUIHandler : MonoBehaviour
         instance = this;
 
         velocityText = velocityTextObject.GetComponent<TextMeshProUGUI>();
-        timeText = timeTextObject.GetComponent<TextMeshProUGUI>();
 
+        timeText = timeTextObject.GetComponent<TextMeshProUGUI>();
         lapsText = lapsTextObject.GetComponent<TextMeshProUGUI>();
+
+        endRacePosition = endRaceObject.transform.Find("RacePosition").GetComponent<TextMeshProUGUI>();
 
         int tempLaps = GameHandler.instance.amountOfLaps;
         previousLaps = new TextMeshProUGUI[tempLaps];
@@ -72,5 +76,25 @@ public class PlayerUIHandler : MonoBehaviour
         currentTime = TimeSpan.FromSeconds(newTime);
 
         previousLaps[currentLap - 1].text = currentTime.ToString(@"mm\:ss\:fff");
+    }
+    public void ShowEndRaceScreen(int playerRacePosition)
+    {
+        endRaceObject.SetActive(true);
+
+        switch (playerRacePosition)
+        {
+            case 0:
+                endRacePosition.text = "1st place";
+                break;
+            case 1:
+                endRacePosition.text = "2nd place";
+                break;
+            case 2:
+                endRacePosition.text = "3rd place";
+                break;
+            default:
+                endRacePosition.text = playerRacePosition+"th place";
+                break;
+        }
     }
 }

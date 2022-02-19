@@ -42,6 +42,11 @@ public class CarController : MonoBehaviour
         normalSpeed = speed;
     }
 
+    void Start()
+    {
+        GameHandler.instance.RegisterPlayer(this);
+    }
+
     void FixedUpdate()
     {
         GroundCheck();
