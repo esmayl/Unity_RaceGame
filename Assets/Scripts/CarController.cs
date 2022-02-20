@@ -15,6 +15,7 @@ public class CarController : MonoBehaviour
     public float speed = 2000;
 
     public int playerId;
+    public Vector3 carForward;
 
     Rigidbody thisBody;
     float second = 0;
@@ -40,6 +41,8 @@ public class CarController : MonoBehaviour
         previousPos = transform.position;
 
         normalSpeed = speed;
+
+        carForward = transform.forward;
     }
 
     void Start()
@@ -66,6 +69,8 @@ public class CarController : MonoBehaviour
         {
             second += Time.fixedDeltaTime;
         }
+
+        carForward = transform.forward;
     }
 
 

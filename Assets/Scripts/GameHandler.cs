@@ -18,6 +18,7 @@ public class GameHandler : MonoBehaviour
 
     Dictionary<int, List<float>> laptimes = new Dictionary<int, List<float>>();
     List<CarController> players = new List<CarController>();
+    int[] racePositions;
 
     void Awake()
     {
@@ -27,7 +28,8 @@ public class GameHandler : MonoBehaviour
         instance = this;
 
         gameTimers = new float[amountOfPlayers];
-        currentLaps = new int[amountOfLaps];
+        currentLaps = new int[amountOfPlayers];
+        racePositions = new int[amountOfPlayers];
 
         List<float> tempTimes = new List<float>();
 
@@ -36,6 +38,11 @@ public class GameHandler : MonoBehaviour
             midPointPast.Add(false);
             laptimes.Add(i, new List<float>() { 0f });
             currentLaps[i] = 1;
+        }
+
+        for (int i = 0; i < racePositions.Length; i++)
+        {
+            racePositions[i] = i;
         }
 
     }
@@ -55,6 +62,16 @@ public class GameHandler : MonoBehaviour
         }
 
         PlayerUIHandler.instance.UpdateTimeText(gameTimers[0]);
+
+        for (int i = 0; i < amountOfPlayers; i++)
+        {
+            SetRacePositions(i);
+        }
+
+        for (int i = 0; i < racePositions.Length; i++)
+        {
+            PlayerUIHandler.instance.racePositionHolder.UpdateTime(racePositions[i], i, laptimes[i][laptimes[i].Count - 1]);
+        }
 
 
     }
@@ -88,33 +105,40 @@ public class GameHandler : MonoBehaviour
 
     }
 
-    int GetRacePosition(int playerId)
+    void SetRacePositions(int playerId)
     {
-        if (!laptimes.ContainsKey(playerId)) { return -1; }
+        int positionFound = 0; // Set to last position, in case no player is found in range
 
-        TimeSpan playerTime = TimeSpan.FromSeconds(laptimes[playerId][laptimes[playerId].Count - 1]);
-
-        int positionFound = 0;
-
-        TimeSpan compareTime = new TimeSpan();
+        Vector3 comparePos = players[playerId].transform.position;
 
         for (int i = 0; i < amountOfPlayers; i++)
         {
-            if(i == playerId) { continue; }
+            if(i == playerId) { continue; } // Don't compare to self
 
-            compareTime = TimeSpan.FromSeconds(laptimes[i][laptimes[i].Count-1]);
+            if(currentLaps[playerId] != currentLaps[i]) { continue; } // Prevent position change when lapping other car
 
-            if (compareTime.CompareTo(playerTime) <= 0)
+            if (Vector3.Distance(comparePos, players[i].transform.position) < 10) // Check if in range, to prevent Dot product working on car driving in oposite direction
             {
-                positionFound = i;
+                Vector3 dir = comparePos - players[i].transform.position;
+
+                if (Vector3.Dot(players[playerId].carForward, dir) < 0) // Check if the car with playerId is behind another car, if so change position
+                {
+                    //Debug.Log(players[playerId].playerId + " is behind  " + players[i].playerId);
+
+                    if (positionFound < amountOfPlayers)
+                    {
+                        positionFound++;
+                    }
+                }
             }
-            else
+            else // In case car is not in range of another car, keep the same position last found
             {
-                positionFound++;
+                positionFound = racePositions[playerId];
             }
         }
 
-        return positionFound;
+        racePositions[playerId] = positionFound;
+
     }
 
     public void NextLap(int playerId)
@@ -133,20 +157,11 @@ public class GameHandler : MonoBehaviour
         {
             if (playerId == 0) 
             {
-                PlayerUIHandler.instance.ShowEndRaceScreen(GetRacePosition(playerId));
+                PlayerUIHandler.instance.ShowEndRaceScreen(racePositions[playerId]);
                 Debug.Log("Race over!");
             }
         }
 
         gameTimers[playerId] = 0;
-
-        for (int i = 0; i < amountOfPlayers; i++)
-        {
-            int position = GetRacePosition(i);
-            if (position != -1)
-            {
-                PlayerUIHandler.instance.racePositionHolder.UpdateTime(position, i, laptimes[i][laptimes[i].Count - 1]);
-            }
-        }
     }
 }

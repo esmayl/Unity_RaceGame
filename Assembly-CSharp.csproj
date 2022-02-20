@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\RacePositionHandler.cs" />
     <Compile Include="Assets\Scripts\InputHandler.cs" />
+    <Compile Include="Assets\Scripts\Utils.cs" />
     <Compile Include="Assets\Scripts\CameraFollow.cs" />
     <Compile Include="Assets\Scripts\AiNodes.cs" />
     <Compile Include="Assets\Scripts\TriggerHandler.cs" />
@@ -67,7 +68,6 @@
     <Compile Include="Assets\Scripts\GameHandler.cs" />
     <Compile Include="Assets\Scripts\Node.cs" />
     <Compile Include="Assets\Scripts\AiHandler.cs" />
-    <Compile Include="Assets\Scripts\Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
