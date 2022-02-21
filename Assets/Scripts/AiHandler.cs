@@ -35,7 +35,7 @@ public class AiHandler : MonoBehaviour
         }
     }
 
-    void OnDrawGizmos()
+    void OnDrawGizmosSelected()
     {
         if (!currentNode) { return; }
 

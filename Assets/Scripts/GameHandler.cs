@@ -63,7 +63,7 @@ public class GameHandler : MonoBehaviour
 
         PlayerUIHandler.instance.UpdateTimeText(gameTimers[0]);
 
-        for (int i = 0; i < amountOfPlayers; i++)
+        for (int i = 0; i < amountOfPlayers-1; i++)
         {
             SetRacePositions(i);
         }
@@ -107,33 +107,32 @@ public class GameHandler : MonoBehaviour
 
     void SetRacePositions(int playerId)
     {
-        int positionFound = 0; // Set to last position, in case no player is found in range
+        int positionFound = racePositions[playerId];
 
         Vector3 comparePos = players[playerId].transform.position;
 
-        for (int i = 0; i < amountOfPlayers; i++)
+        for (int i = 0; i < amountOfPlayers - 1; i++)
         {
-            if(i == playerId) { continue; } // Don't compare to self
-
-            if(currentLaps[playerId] != currentLaps[i]) { continue; } // Prevent position change when lapping other car
+            if(i == playerId) { continue; }
+                
+            if (currentLaps[i] != currentLaps[i + 1]) { continue; } // Prevent position change when lapping other car
 
             if (Vector3.Distance(comparePos, players[i].transform.position) < 10) // Check if in range, to prevent Dot product working on car driving in oposite direction
             {
                 Vector3 dir = comparePos - players[i].transform.position;
 
-                if (Vector3.Dot(players[playerId].carForward, dir) < 0) // Check if the car with playerId is behind another car, if so change position
-                {
-                    //Debug.Log(players[playerId].playerId + " is behind  " + players[i].playerId);
+                float dotProduct = Vector3.Dot(players[playerId].carForward, dir.normalized);
 
-                    if (positionFound < amountOfPlayers)
+                //Debug.Log(dotProduct);
+
+                if (dotProduct < -0.6f && racePositions[i] < positionFound) // Check if the car with playerId is behind another car, if so change position
+                {
+                    Debug.Log(players[i].playerId + " " + dotProduct);
+                    if (positionFound < amountOfPlayers - 1)
                     {
                         positionFound++;
                     }
                 }
-            }
-            else // In case car is not in range of another car, keep the same position last found
-            {
-                positionFound = racePositions[playerId];
             }
         }
 
