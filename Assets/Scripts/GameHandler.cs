@@ -42,7 +42,7 @@ public class GameHandler : MonoBehaviour
 
         for (int i = 0; i < racePositions.Length; i++)
         {
-            racePositions[i] = i;
+            racePositions[i] = 0;
         }
 
     }
@@ -63,16 +63,40 @@ public class GameHandler : MonoBehaviour
 
         PlayerUIHandler.instance.UpdateTimeText(gameTimers[0]);
 
-        for (int i = 0; i < amountOfPlayers-1; i++)
-        {
-            SetRacePositions(i);
-        }
+        SetRacePositions();
 
         for (int i = 0; i < racePositions.Length; i++)
         {
-            PlayerUIHandler.instance.racePositionHolder.UpdateTime(racePositions[i], i, laptimes[i][laptimes[i].Count - 1]);
+            PlayerUIHandler.instance.racePositionHolder.UpdateTime(racePositions[i], i, laptimes[i][currentLaps[i] - 1]);
         }
 
+
+    }
+
+    void OnDrawGizmos()
+    {
+        //for (int j = 0; j < amountOfPlayers; j++)
+        //{
+
+        //    Vector3[] temp = SetRacePositions(j);
+        //    foreach (Vector3 item in temp)
+        //    {
+
+        //        if (j == 0)
+        //        {
+        //            Debug.DrawRay(players[j].transform.position, item, Color.red);
+        //        }
+        //        if (j == 1)
+        //        {
+        //            Debug.DrawRay(players[j].transform.position, item, Color.blue);
+        //        }
+        //        if (j == 2)
+        //        {
+        //            Debug.DrawRay(players[j].transform.position, item, Color.green);
+        //        }
+        //    }
+        //    temp = null;
+        //}
 
     }
 
@@ -105,38 +129,63 @@ public class GameHandler : MonoBehaviour
 
     }
 
-    void SetRacePositions(int playerId)
+    void SetRacePositions()
     {
-        int positionFound = racePositions[playerId];
+        int positionFound = 0;
 
-        Vector3 comparePos = players[playerId].transform.position;
-
-        for (int i = 0; i < amountOfPlayers - 1; i++)
+        for (int j = 0; j < amountOfPlayers; j++)
         {
-            if(i == playerId) { continue; }
-                
-            if (currentLaps[i] != currentLaps[i + 1]) { continue; } // Prevent position change when lapping other car
+            Vector3 comparePos = players[j].transform.position;
+            
+            positionFound = 0;
 
-            if (Vector3.Distance(comparePos, players[i].transform.position) < 10) // Check if in range, to prevent Dot product working on car driving in oposite direction
+            for (int i = 0; i < amountOfPlayers; i++)
             {
-                Vector3 dir = comparePos - players[i].transform.position;
+                if(i == j) { continue; }
 
-                float dotProduct = Vector3.Dot(players[playerId].carForward, dir.normalized);
 
-                //Debug.Log(dotProduct);
-
-                if (dotProduct < -0.6f && racePositions[i] < positionFound) // Check if the car with playerId is behind another car, if so change position
+                if (Vector3.Dot(players[j].carForward, players[i].carForward) > 0.7f) // Check if looking in the same direction, to prevent Dot product working on car driving in oposite direction
                 {
-                    Debug.Log(players[i].playerId + " " + dotProduct);
-                    if (positionFound < amountOfPlayers - 1)
+                    Vector3 dir = players[i].transform.position - comparePos;
+
+                    float dotProduct = Vector3.Dot(players[j].carForward, dir.normalized);
+
+                    if(currentLaps[j] < currentLaps[i])
                     {
-                        positionFound++;
+                        Debug.Log("Less laps");
+                        //if (positionFound < amountOfPlayers - 1)
+                        //{
+                        //    positionFound++;
+                        //}
+                    }
+                    else if (dotProduct <= 0f && currentLaps[j] == currentLaps[i])
+                    {
+                        Debug.Log("Dot less");
+
+                        if (positionFound < amountOfPlayers - 1)
+                        {
+                            positionFound++;
+                        }
+                    }
+                    else if (dotProduct > 0f && currentLaps[j] == currentLaps[i])
+                    {
+                        Debug.Log("Dot more");
+
+                        if (positionFound > 0)
+                        {
+                            positionFound--;
+                        }
                     }
                 }
+                else
+                {
+                    positionFound = racePositions[j];
+                }
             }
+            racePositions[j] = positionFound;
+            
         }
 
-        racePositions[playerId] = positionFound;
 
     }
 

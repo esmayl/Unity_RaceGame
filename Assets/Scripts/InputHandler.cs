@@ -24,6 +24,11 @@ public class InputHandler : MonoBehaviour
         controller = GetComponent<CarController>();
     }
 
+    void Update()
+    {
+        PlayerUIHandler.instance.UpdateVelocityText(controller.velocity);
+    }
+
     private void MovementInput_performed(InputAction.CallbackContext obj)
     {
         controller.playerInput = obj.ReadValue<Vector2>();

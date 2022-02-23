@@ -63,7 +63,6 @@ public class CarController : MonoBehaviour
             velocity = Vector3.Distance(previousPos, transform.position) * 3600 / 100; // /100 for km/h
             second = 0;
             previousPos = transform.position;
-            PlayerUIHandler.instance.UpdateVelocityText(velocity);
         }
         else
         {
