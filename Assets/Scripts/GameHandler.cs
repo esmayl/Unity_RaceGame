@@ -8,6 +8,7 @@ public class GameHandler : MonoBehaviour
     public static GameHandler instance;
     public GameObject finish;
     public GameObject midPoint;
+    public GameObject checkpoints;
 
     public int amountOfLaps;
     public int amountOfPlayers = 2;
@@ -19,11 +20,29 @@ public class GameHandler : MonoBehaviour
     Dictionary<int, List<float>> laptimes = new Dictionary<int, List<float>>();
     List<CarController> players = new List<CarController>();
     int[] racePositions;
+    int[] checkpointCounter;
+    int[] currentCheckpoint;
+    Checkpoint[] allCheckpoints;
 
     void Awake()
     {
         finish.GetComponent<TriggerHandler>().triggerDelegate += LapDelegate;
         midPoint.GetComponent<TriggerHandler>().triggerDelegate += PastMidpoint;
+
+        int i = 0;
+        foreach(Transform t in checkpoints.transform)
+        {
+            Checkpoint temp = t.GetComponent<Checkpoint>();
+            temp.checkpointId = i;
+            temp.triggerDelegate += CheckpointDelegate;
+            temp.location = temp.transform.position;
+
+            i++;
+        }
+        checkpointCounter = new int[amountOfPlayers];
+        currentCheckpoint = new int[amountOfPlayers];
+
+        allCheckpoints = new Checkpoint[checkpoints.transform.childCount];
 
         instance = this;
 
@@ -33,17 +52,21 @@ public class GameHandler : MonoBehaviour
 
         List<float> tempTimes = new List<float>();
 
-        for (int i = 0; i < amountOfPlayers; i++)
+        for (i = 0; i < amountOfPlayers; i++)
         {
             midPointPast.Add(false);
             laptimes.Add(i, new List<float>() { 0f });
-            currentLaps[i] = 1;
+            currentLaps[i] = 0;
+            racePositions[i] = i;
         }
 
-        for (int i = 0; i < racePositions.Length; i++)
+        i = 0;
+        foreach (Transform child in checkpoints.transform)
         {
-            racePositions[i] = 0;
+            allCheckpoints[i] = child.GetComponent<Checkpoint>();
+            i++;
         }
+
 
     }
 
@@ -58,46 +81,16 @@ public class GameHandler : MonoBehaviour
         for (int i = 0; i < gameTimers.Length; i++)
         {
             gameTimers[i] += Time.deltaTime;
-            laptimes[i][currentLaps[i] - 1] = gameTimers[i];
+
+            laptimes[i][currentLaps[i]] = gameTimers[i];
         }
 
         PlayerUIHandler.instance.UpdateTimeText(gameTimers[0]);
 
-        SetRacePositions();
-
-        for (int i = 0; i < racePositions.Length; i++)
+        for (int i = 0; i < amountOfPlayers; i++)
         {
-            PlayerUIHandler.instance.racePositionHolder.UpdateTime(racePositions[i], i, laptimes[i][currentLaps[i] - 1]);
+            PlayerUIHandler.instance.racePositionHolder.UpdateTime(racePositions[i], i, laptimes[i][currentLaps[i]]);
         }
-
-
-    }
-
-    void OnDrawGizmos()
-    {
-        //for (int j = 0; j < amountOfPlayers; j++)
-        //{
-
-        //    Vector3[] temp = SetRacePositions(j);
-        //    foreach (Vector3 item in temp)
-        //    {
-
-        //        if (j == 0)
-        //        {
-        //            Debug.DrawRay(players[j].transform.position, item, Color.red);
-        //        }
-        //        if (j == 1)
-        //        {
-        //            Debug.DrawRay(players[j].transform.position, item, Color.blue);
-        //        }
-        //        if (j == 2)
-        //        {
-        //            Debug.DrawRay(players[j].transform.position, item, Color.green);
-        //        }
-        //    }
-        //    temp = null;
-        //}
-
     }
 
     public void RegisterPlayer(CarController player)
@@ -114,7 +107,7 @@ public class GameHandler : MonoBehaviour
     {
         if (midPointPast[playerId])
         {
-            if (currentLaps[playerId] < 1)
+            if (laptimes[playerId].Count < 1)
             {
                 laptimes[playerId][0] = gameTimers[playerId];
             }
@@ -129,66 +122,6 @@ public class GameHandler : MonoBehaviour
 
     }
 
-    void SetRacePositions()
-    {
-        int positionFound = 0;
-
-        for (int j = 0; j < amountOfPlayers; j++)
-        {
-            Vector3 comparePos = players[j].transform.position;
-            
-            positionFound = 0;
-
-            for (int i = 0; i < amountOfPlayers; i++)
-            {
-                if(i == j) { continue; }
-
-
-                if (Vector3.Dot(players[j].carForward, players[i].carForward) > 0.7f) // Check if looking in the same direction, to prevent Dot product working on car driving in oposite direction
-                {
-                    Vector3 dir = players[i].transform.position - comparePos;
-
-                    float dotProduct = Vector3.Dot(players[j].carForward, dir.normalized);
-
-                    if(currentLaps[j] < currentLaps[i])
-                    {
-                        Debug.Log("Less laps");
-                        //if (positionFound < amountOfPlayers - 1)
-                        //{
-                        //    positionFound++;
-                        //}
-                    }
-                    else if (dotProduct <= 0f && currentLaps[j] == currentLaps[i])
-                    {
-                        Debug.Log("Dot less");
-
-                        if (positionFound < amountOfPlayers - 1)
-                        {
-                            positionFound++;
-                        }
-                    }
-                    else if (dotProduct > 0f && currentLaps[j] == currentLaps[i])
-                    {
-                        Debug.Log("Dot more");
-
-                        if (positionFound > 0)
-                        {
-                            positionFound--;
-                        }
-                    }
-                }
-                else
-                {
-                    positionFound = racePositions[j];
-                }
-            }
-            racePositions[j] = positionFound;
-            
-        }
-
-
-    }
-
     public void NextLap(int playerId)
     {
         if (currentLaps[playerId] < amountOfLaps)
@@ -197,8 +130,8 @@ public class GameHandler : MonoBehaviour
             
             if (playerId == 0)
             {
-                PlayerUIHandler.instance.UpdatePreviousTimeText(gameTimers[playerId], currentLaps[playerId]-1);
-                PlayerUIHandler.instance.UpdateCurrentLap(currentLaps[playerId], amountOfLaps);
+                PlayerUIHandler.instance.UpdatePreviousTimeText(gameTimers[playerId], currentLaps[playerId]);
+                PlayerUIHandler.instance.UpdateCurrentLap(currentLaps[playerId]+1, amountOfLaps);
             }
         }
         else
@@ -212,4 +145,49 @@ public class GameHandler : MonoBehaviour
 
         gameTimers[playerId] = 0;
     }
+
+    void SetRacePositions()
+    {
+
+        for (int j = 0; j < amountOfPlayers; j++)
+        {
+            if(currentLaps[j] == amountOfLaps) { continue; }
+
+            int highest = checkpointCounter[j];
+            int index = 0;
+
+            for (int i = 0; i < amountOfPlayers; i++)
+            {
+                if(i == j) { continue; }
+                     
+                if(checkpointCounter[i] == highest)
+                {
+                    float distanceJ = Vector3.Distance(allCheckpoints[currentCheckpoint[j]].location, players[j].transform.position);
+                    float distanceI = Vector3.Distance(allCheckpoints[currentCheckpoint[i]].location, players[i].transform.position);
+
+                    if(distanceJ < distanceI)
+                    {
+                        index++;
+                    }
+                }
+
+                if (checkpointCounter[i] > highest)
+                {
+                    index++;
+                }
+            }
+            racePositions[j] = index;
+        }
+
+
+    }
+
+    public void CheckpointDelegate(int playerId,int checkpointId)
+    {
+        checkpointCounter[playerId]++;
+        currentCheckpoint[playerId] = checkpointId;
+
+        SetRacePositions();
+    }
+
 }

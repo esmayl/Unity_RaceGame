@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class TriggerHandler : MonoBehaviour
 {
-    public delegate void TriggerDelegate(int playerId);
-    public event TriggerDelegate triggerDelegate;
+    public event Delegates.TriggerDelegate triggerDelegate;
 
 
     void OnTriggerEnter(Collider other)
@@ -15,4 +14,11 @@ public class TriggerHandler : MonoBehaviour
             triggerDelegate(other.GetComponent<CarController>().playerId);
         }
     }
+}
+
+
+public static class Delegates
+{
+    public delegate void TriggerDelegate(int playerId);
+    public delegate void CheckpointDelegate(int playerId, int checkpointId);
 }

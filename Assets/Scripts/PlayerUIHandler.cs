@@ -75,7 +75,7 @@ public class PlayerUIHandler : MonoBehaviour
     {
         currentTime = TimeSpan.FromSeconds(newTime);
 
-        previousLaps[currentLap - 1].text = currentTime.ToString(@"mm\:ss\:fff");
+        previousLaps[currentLap-1].text = currentTime.ToString(@"mm\:ss\:fff");
     }
     public void ShowEndRaceScreen(int playerRacePosition)
     {
