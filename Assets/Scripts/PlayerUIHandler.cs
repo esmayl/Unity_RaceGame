@@ -10,7 +10,7 @@ public class PlayerUIHandler : MonoBehaviour
     public static PlayerUIHandler instance;
 
     public GameObject velocityTextObject;
-    public GameObject timeTextObject;
+    public GameObject currentTimeTextObject;
     public GameObject lapsTextObject;
     public GameObject previousLapsHolder;
     public GameObject previousLapsTemplate;
@@ -19,7 +19,7 @@ public class PlayerUIHandler : MonoBehaviour
     public RacePositionHandler racePositionHolder;
 
     TextMeshProUGUI velocityText;
-    TextMeshProUGUI timeText;
+    TextMeshProUGUI currentTimeText;
     TextMeshProUGUI lapsText;
     TextMeshProUGUI[] previousLaps;
     TextMeshProUGUI endRacePosition;
@@ -33,19 +33,18 @@ public class PlayerUIHandler : MonoBehaviour
 
         velocityText = velocityTextObject.GetComponent<TextMeshProUGUI>();
 
-        timeText = timeTextObject.GetComponent<TextMeshProUGUI>();
+        currentTimeText = currentTimeTextObject.GetComponent<TextMeshProUGUI>();
         lapsText = lapsTextObject.GetComponent<TextMeshProUGUI>();
 
         endRacePosition = endRaceObject.transform.Find("RacePosition").GetComponent<TextMeshProUGUI>();
 
-        int tempLaps = GameHandler.instance.amountOfLaps;
-        previousLaps = new TextMeshProUGUI[tempLaps];
+        previousLaps = new TextMeshProUGUI[GameHandler.instance.amountOfLaps];
 
         
-        UpdateCurrentLap(1, tempLaps);
+        UpdateCurrentLap(0, GameHandler.instance.amountOfLaps);
 
 
-        for (int i = 0; i < tempLaps; i++)
+        for (int i = 0; i < GameHandler.instance.amountOfLaps; i++)
         {
             GameObject temp = Instantiate(previousLapsTemplate, previousLapsHolder.transform);
             previousLaps[i] = temp.GetComponent<TextMeshProUGUI>();
@@ -63,12 +62,12 @@ public class PlayerUIHandler : MonoBehaviour
     {
         currentTime = TimeSpan.FromSeconds(newTime);
 
-        timeText.text = currentTime.ToString(@"mm\:ss\:fff");    
+        currentTimeText.text = currentTime.ToString(@"mm\:ss\:fff");    
     }
 
     public void UpdateCurrentLap(int currentLap,int amountOfLaps)
     {
-        lapsText.text = currentLap+"/"+amountOfLaps;
+        lapsText.text = (currentLap + 1)+"/"+amountOfLaps;
     }
 
     public void UpdatePreviousTimeText(float newTime,int currentLap)
@@ -92,9 +91,9 @@ public class PlayerUIHandler : MonoBehaviour
             case 2:
                 endRacePosition.text = "3rd place";
                 break;
-            default:
-                endRacePosition.text = playerRacePosition+"th place";
-                break;
         }
+
+        endRacePosition.text = (playerRacePosition + 1) + "th place";
+
     }
 }

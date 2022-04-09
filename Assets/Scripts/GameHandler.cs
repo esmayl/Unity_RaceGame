@@ -39,18 +39,18 @@ public class GameHandler : MonoBehaviour
 
             i++;
         }
+
         checkpointCounter = new int[amountOfPlayers];
         currentCheckpoint = new int[amountOfPlayers];
+        currentLaps = new int[amountOfPlayers];
+        racePositions = new int[amountOfPlayers];
+
+        gameTimers = new float[amountOfPlayers];
 
         allCheckpoints = new Checkpoint[checkpoints.transform.childCount];
 
         instance = this;
 
-        gameTimers = new float[amountOfPlayers];
-        currentLaps = new int[amountOfPlayers];
-        racePositions = new int[amountOfPlayers];
-
-        List<float> tempTimes = new List<float>();
 
         for (i = 0; i < amountOfPlayers; i++)
         {
@@ -85,11 +85,17 @@ public class GameHandler : MonoBehaviour
             laptimes[i][currentLaps[i]] = gameTimers[i];
         }
 
-        PlayerUIHandler.instance.UpdateTimeText(gameTimers[0]);
+        if (currentLaps[0] < amountOfLaps)
+        {
+            PlayerUIHandler.instance.UpdateTimeText(gameTimers[0]);
+        }
 
         for (int i = 0; i < amountOfPlayers; i++)
         {
-            PlayerUIHandler.instance.racePositionHolder.UpdateTime(racePositions[i], i, laptimes[i][currentLaps[i]]);
+            if (currentLaps[i] < amountOfLaps)
+            {
+                PlayerUIHandler.instance.racePositionHolder.UpdateTime(racePositions[i], i, laptimes[i][currentLaps[i]]);
+            }
         }
     }
 
@@ -124,26 +130,27 @@ public class GameHandler : MonoBehaviour
 
     public void NextLap(int playerId)
     {
+        currentLaps[playerId]++;
+
         if (currentLaps[playerId] < amountOfLaps)
         {
-            currentLaps[playerId]++;
-            
             if (playerId == 0)
             {
                 PlayerUIHandler.instance.UpdatePreviousTimeText(gameTimers[playerId], currentLaps[playerId]);
-                PlayerUIHandler.instance.UpdateCurrentLap(currentLaps[playerId]+1, amountOfLaps);
+                PlayerUIHandler.instance.UpdateCurrentLap(currentLaps[playerId], amountOfLaps);
             }
+            gameTimers[playerId] = 0;
         }
-        else
+        else if(currentLaps[playerId] == amountOfLaps)
         {
             if (playerId == 0) 
             {
+                PlayerUIHandler.instance.UpdatePreviousTimeText(gameTimers[playerId], currentLaps[playerId]);
                 PlayerUIHandler.instance.ShowEndRaceScreen(racePositions[playerId]);
                 Debug.Log("Race over!");
             }
         }
 
-        gameTimers[playerId] = 0;
     }
 
     void SetRacePositions()
@@ -151,21 +158,20 @@ public class GameHandler : MonoBehaviour
 
         for (int j = 0; j < amountOfPlayers; j++)
         {
-            if(currentLaps[j] == amountOfLaps) { continue; }
+            if (currentLaps[j] == amountOfLaps) { continue; } // Stop changing positions after the race has finished
 
             int highest = checkpointCounter[j];
+
             int index = 0;
 
             for (int i = 0; i < amountOfPlayers; i++)
             {
-                if(i == j) { continue; }
-                     
-                if(checkpointCounter[i] == highest)
+                if (checkpointCounter[i] == highest)
                 {
                     float distanceJ = Vector3.Distance(allCheckpoints[currentCheckpoint[j]].location, players[j].transform.position);
                     float distanceI = Vector3.Distance(allCheckpoints[currentCheckpoint[i]].location, players[i].transform.position);
 
-                    if(distanceJ < distanceI)
+                    if (distanceJ < distanceI)
                     {
                         index++;
                     }
@@ -184,7 +190,7 @@ public class GameHandler : MonoBehaviour
 
     public void CheckpointDelegate(int playerId,int checkpointId)
     {
-        checkpointCounter[playerId]++;
+        checkpointCounter[playerId] ++;
         currentCheckpoint[playerId] = checkpointId;
 
         SetRacePositions();
