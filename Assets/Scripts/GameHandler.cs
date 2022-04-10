@@ -138,6 +138,11 @@ public class GameHandler : MonoBehaviour
             {
                 PlayerUIHandler.instance.UpdatePreviousTimeText(gameTimers[playerId], currentLaps[playerId]);
                 PlayerUIHandler.instance.UpdateCurrentLap(currentLaps[playerId], amountOfLaps);
+
+                foreach(Checkpoint checkpoint in allCheckpoints)
+                {
+                    checkpoint.EnableCoin();
+                }
             }
             gameTimers[playerId] = 0;
         }
@@ -150,7 +155,6 @@ public class GameHandler : MonoBehaviour
                 Debug.Log("Race over!");
             }
         }
-
     }
 
     void SetRacePositions()

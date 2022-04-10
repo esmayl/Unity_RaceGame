@@ -15,5 +15,20 @@ public class Checkpoint : MonoBehaviour
         {
             triggerDelegate(other.GetComponent<CarController>().playerId,checkpointId);
         }
+
+        if(other.gameObject.name == "Car")
+        {
+            CollectCoin();
+        }
+    }
+
+    void CollectCoin()
+    {
+        transform.GetChild(0).gameObject.SetActive(false);
+    }
+
+    public void EnableCoin()
+    {
+        transform.GetChild(0).gameObject.SetActive(true);
     }
 }

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5498910414014931244}
   - component: {fileID: 7761103670164231654}
   - component: {fileID: 865014131078781197}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Track_Fence_line_type_01_red_block_1&5m_free_obs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -52,8 +52,8 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
+  m_DynamicOccludee: 0
+  m_StaticShadowCaster: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -62,7 +62,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: ac7d9a97c8bd19c4199840392bcb00b3, type: 2}
+  - {fileID: 2100000, guid: 382ac3b0ffce73240b74bafbfa41b900, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

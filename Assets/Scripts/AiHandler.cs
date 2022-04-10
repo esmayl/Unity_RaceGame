@@ -16,7 +16,7 @@ public class AiHandler : MonoBehaviour
     {
         carController = GetComponent<CarController>();
         translatedDirection = new Vector2();
-        layer = LayerMask.GetMask("Car");
+        layer = LayerMask.GetMask("Car","Wall");
         frontHit = new RaycastHit();
         frontLeftHit = new RaycastHit();
         frontRightHit = new RaycastHit();
@@ -36,21 +36,22 @@ public class AiHandler : MonoBehaviour
 
         if(Physics.Raycast(transform.position + transform.up, transform.forward, out frontHit, 3f, layer))
         {
-            Debug.Log("Hit car in front " + frontHit.transform.gameObject.name);
+            //Debug.Log("Hit car in front " + frontHit.transform.gameObject.name);
+
             translatedDirection.y = -1 / frontHit.distance;
         }
 
 
         if(Physics.Raycast(transform.position + transform.up, transform.forward + transform.right, out frontRightHit, 3f, layer))
         {
-            Debug.Log("Hit car right " + frontRightHit.transform.gameObject.name);
+            //Debug.Log("Hit car right " + frontRightHit.transform.gameObject.name);
 
             translatedDirection.x = -1 / frontRightHit.distance;
         }
 
         if (Physics.Raycast(transform.position + transform.up, transform.forward - transform.right, out frontLeftHit, 3f, layer))
         {
-            Debug.Log("Hit car in left " + frontLeftHit.transform.gameObject.name);
+            //Debug.Log("Hit car in left " + frontLeftHit.transform.gameObject.name);
 
             translatedDirection.x = 1 / frontLeftHit.distance;
         }
