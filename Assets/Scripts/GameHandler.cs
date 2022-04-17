@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameHandler : MonoBehaviour
 {
@@ -70,10 +71,11 @@ public class GameHandler : MonoBehaviour
 
     }
 
-
     void Start()
     {
         PlayerUIHandler.instance.racePositionHolder.InitRacePositionList(amountOfPlayers);
+        OnSceneLoaded();
+
     }
 
     void Update()
@@ -104,29 +106,6 @@ public class GameHandler : MonoBehaviour
         players.Add(player);
     }
 
-    void PastMidpoint(int playerId)
-    {
-        midPointPast[playerId] = true;
-    }
-
-    void LapDelegate(int playerId)
-    {
-        if (midPointPast[playerId])
-        {
-            if (laptimes[playerId].Count < 1)
-            {
-                laptimes[playerId][0] = gameTimers[playerId];
-            }
-            else
-            {
-                laptimes[playerId].Add(gameTimers[playerId]);
-            }
-            
-            midPointPast[playerId] = false;
-            NextLap(playerId);
-        }
-
-    }
 
     public void NextLap(int playerId)
     {
@@ -152,9 +131,41 @@ public class GameHandler : MonoBehaviour
             {
                 PlayerUIHandler.instance.UpdatePreviousTimeText(gameTimers[playerId], currentLaps[playerId]);
                 PlayerUIHandler.instance.ShowEndRaceScreen(racePositions[playerId]);
-                Debug.Log("Race over!");
+                //Debug.Log("Race over!");
             }
         }
+    }
+
+    public void CheckpointDelegate(int playerId,int checkpointId)
+    {
+        checkpointCounter[playerId] ++;
+        currentCheckpoint[playerId] = checkpointId;
+
+        SetRacePositions();
+    }
+
+    void PastMidpoint(int playerId)
+    {
+        midPointPast[playerId] = true;
+    }
+
+    void LapDelegate(int playerId)
+    {
+        if (midPointPast[playerId])
+        {
+            if (laptimes[playerId].Count < 1)
+            {
+                laptimes[playerId][0] = gameTimers[playerId];
+            }
+            else
+            {
+                laptimes[playerId].Add(gameTimers[playerId]);
+            }
+
+            midPointPast[playerId] = false;
+            NextLap(playerId);
+        }
+
     }
 
     void SetRacePositions()
@@ -192,12 +203,30 @@ public class GameHandler : MonoBehaviour
 
     }
 
-    public void CheckpointDelegate(int playerId,int checkpointId)
+    void OnSceneLoaded()
     {
-        checkpointCounter[playerId] ++;
-        currentCheckpoint[playerId] = checkpointId;
+        foreach (CarController player in players)
+        {
+            player.enabled = false;
+        }
 
-        SetRacePositions();
+        StartCoroutine("RaceStartCounter");
+    }
+
+    IEnumerator RaceStartCounter()
+    {
+        for (int i = 3; i > 0; i--)
+        {
+            PlayerUIHandler.instance.ShowStartTimer(i);
+            yield return new WaitForSeconds(1f);
+        }
+
+        PlayerUIHandler.instance.DisableStartTimer();
+
+        foreach (CarController player in players)
+        {
+            player.enabled = true;
+        }
     }
 
 }

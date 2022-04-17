@@ -37,7 +37,7 @@ public class InputHandler : MonoBehaviour
     void Brake_performed(InputAction.CallbackContext obj)
     {
         controller.Brake();
-        Debug.Log("Braking");
+        //Debug.Log("Braking");
     }
 
     void Brake_stop(InputAction.CallbackContext obj)

@@ -9,6 +9,7 @@ public class PlayerUIHandler : MonoBehaviour
 {
     public static PlayerUIHandler instance;
 
+    public GameObject raceStartCounterObject;
     public GameObject velocityTextObject;
     public GameObject currentTimeTextObject;
     public GameObject lapsTextObject;
@@ -18,6 +19,7 @@ public class PlayerUIHandler : MonoBehaviour
 
     public RacePositionHandler racePositionHolder;
 
+    TextMeshProUGUI raceStartCounterText;
     TextMeshProUGUI velocityText;
     TextMeshProUGUI currentTimeText;
     TextMeshProUGUI lapsText;
@@ -31,8 +33,8 @@ public class PlayerUIHandler : MonoBehaviour
     {
         instance = this;
 
+        raceStartCounterText = raceStartCounterObject.GetComponent<TextMeshProUGUI>();
         velocityText = velocityTextObject.GetComponent<TextMeshProUGUI>();
-
         currentTimeText = currentTimeTextObject.GetComponent<TextMeshProUGUI>();
         lapsText = lapsTextObject.GetComponent<TextMeshProUGUI>();
 
@@ -40,7 +42,8 @@ public class PlayerUIHandler : MonoBehaviour
 
         previousLaps = new TextMeshProUGUI[GameHandler.instance.amountOfLaps];
 
-        
+
+
         UpdateCurrentLap(0, GameHandler.instance.amountOfLaps);
 
 
@@ -95,5 +98,18 @@ public class PlayerUIHandler : MonoBehaviour
 
         endRacePosition.text = (playerRacePosition + 1) + "th place";
 
+    }
+
+    public void ShowStartTimer(int count)
+    {
+        raceStartCounterObject.SetActive(true);
+
+        raceStartCounterText.text = ""+count;
+        raceStartCounterObject.GetComponent<Animator>().SetTrigger("Show");
+    }
+
+    public void DisableStartTimer()
+    {
+        raceStartCounterObject.SetActive(false);
     }
 }
