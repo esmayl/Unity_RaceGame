@@ -87,13 +87,13 @@ public class PlayerUIHandler : MonoBehaviour
         {
             case 0:
                 endRacePosition.text = "1st place";
-                break;
+                return;
             case 1:
                 endRacePosition.text = "2nd place";
-                break;
+                return;
             case 2:
                 endRacePosition.text = "3rd place";
-                break;
+                return;
         }
 
         endRacePosition.text = (playerRacePosition + 1) + "th place";
